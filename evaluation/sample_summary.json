@@ -1,1 +1,331 @@
-{"note": "save your API output here"}
+{
+  "summaries": {
+    "ACMR-2022": {
+      "filing_id": "ACMR-2022",
+      "highlights": [
+        "ACMR provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 15% with gross margin 58% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "risks": [
+        "- Cybersecurity incidents could result in penalties. (Risk Factors)",
+        "ACMR provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 15% with gross margin 58% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "tone": "cautious",
+      "source": "lexicon"
+    },
+    "ACMR-2023": {
+      "filing_id": "ACMR-2023",
+      "highlights": [
+        "ACMR provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 20% with gross margin 84% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "risks": [
+        "- Cybersecurity incidents could result in penalties. (Risk Factors)",
+        "ACMR provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 20% with gross margin 84% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "tone": "positive",
+      "source": "lexicon"
+    },
+    "ACMR-2024": {
+      "filing_id": "ACMR-2024",
+      "highlights": [
+        "ACMR provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 24% with gross margin 70% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "risks": [
+        "- Cybersecurity incidents could result in penalties. (Risk Factors)",
+        "ACMR provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 24% with gross margin 70% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "tone": "positive",
+      "source": "lexicon"
+    },
+    "HLSR-2022": {
+      "filing_id": "HLSR-2022",
+      "highlights": [
+        "HLSR provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 21% with gross margin 82% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "risks": [
+        "- Cybersecurity incidents could result in penalties. (Risk Factors)",
+        "HLSR provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 21% with gross margin 82% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "tone": "positive",
+      "source": "lexicon"
+    },
+    "HLSR-2023": {
+      "filing_id": "HLSR-2023",
+      "highlights": [
+        "HLSR provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 15% with gross margin 55% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "risks": [
+        "- Cybersecurity incidents could result in penalties. (Risk Factors)",
+        "HLSR provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 15% with gross margin 55% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "tone": "cautious",
+      "source": "lexicon"
+    },
+    "HLSR-2024": {
+      "filing_id": "HLSR-2024",
+      "highlights": [
+        "HLSR provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 12% with gross margin 77% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "risks": [
+        "- Cybersecurity incidents could result in penalties. (Risk Factors)",
+        "HLSR provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 12% with gross margin 77% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "tone": "neutral",
+      "source": "lexicon"
+    },
+    "LUMO-2022": {
+      "filing_id": "LUMO-2022",
+      "highlights": [
+        "LUMO provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 23% with gross margin 57% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "risks": [
+        "- Cybersecurity incidents could result in penalties. (Risk Factors)",
+        "LUMO provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 23% with gross margin 57% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "tone": "cautious",
+      "source": "lexicon"
+    },
+    "LUMO-2023": {
+      "filing_id": "LUMO-2023",
+      "highlights": [
+        "LUMO provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 9% with gross margin 71% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "risks": [
+        "- Cybersecurity incidents could result in penalties. (Risk Factors)",
+        "LUMO provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 9% with gross margin 71% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "tone": "cautious",
+      "source": "lexicon"
+    },
+    "LUMO-2024": {
+      "filing_id": "LUMO-2024",
+      "highlights": [
+        "LUMO provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 8% with gross margin 56% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "risks": [
+        "- Cybersecurity incidents could result in penalties. (Risk Factors)",
+        "LUMO provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 8% with gross margin 56% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "tone": "cautious",
+      "source": "lexicon"
+    },
+    "NEOV-2022": {
+      "filing_id": "NEOV-2022",
+      "highlights": [
+        "NEOV provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 6% with gross margin 84% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "risks": [
+        "- Cybersecurity incidents could result in penalties. (Risk Factors)",
+        "NEOV provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 6% with gross margin 84% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "tone": "cautious",
+      "source": "lexicon"
+    },
+    "NEOV-2023": {
+      "filing_id": "NEOV-2023",
+      "highlights": [
+        "NEOV provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 25% with gross margin 62% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "risks": [
+        "- Cybersecurity incidents could result in penalties. (Risk Factors)",
+        "NEOV provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 25% with gross margin 62% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "tone": "neutral",
+      "source": "lexicon"
+    },
+    "NEOV-2024": {
+      "filing_id": "NEOV-2024",
+      "highlights": [
+        "NEOV provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 5% with gross margin 84% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "risks": [
+        "- Cybersecurity incidents could result in penalties. (Risk Factors)",
+        "NEOV provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 5% with gross margin 84% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "tone": "cautious",
+      "source": "lexicon"
+    },
+    "ZYNT-2022": {
+      "filing_id": "ZYNT-2022",
+      "highlights": [
+        "ZYNT provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 5% with gross margin 80% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "risks": [
+        "- Cybersecurity incidents could result in penalties. (Risk Factors)",
+        "ZYNT provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 5% with gross margin 80% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "tone": "cautious",
+      "source": "lexicon"
+    },
+    "ZYNT-2023": {
+      "filing_id": "ZYNT-2023",
+      "highlights": [
+        "ZYNT provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 9% with gross margin 86% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "risks": [
+        "- Cybersecurity incidents could result in penalties. (Risk Factors)",
+        "ZYNT provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 9% with gross margin 86% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "tone": "cautious",
+      "source": "lexicon"
+    },
+    "ZYNT-2024": {
+      "filing_id": "ZYNT-2024",
+      "highlights": [
+        "ZYNT provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 9% with gross margin 70% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "risks": [
+        "- Cybersecurity incidents could result in penalties. (Risk Factors)",
+        "ZYNT provides enterprise software and services with subscriptions and support revenue streams. (Business)",
+        "Revenue grew 9% with gross margin 70% driven by cloud migrations and AI analytics. (Results)"
+      ],
+      "tone": "cautious",
+      "source": "lexicon"
+    }
+  },
+  "groundedness": {
+    "ACMR-2022": 1.0,
+    "ACMR-2023": 1.0,
+    "ACMR-2024": 1.0,
+    "HLSR-2022": 1.0,
+    "HLSR-2023": 1.0,
+    "HLSR-2024": 1.0,
+    "LUMO-2022": 1.0,
+    "LUMO-2023": 1.0,
+    "LUMO-2024": 1.0,
+    "NEOV-2022": 1.0,
+    "NEOV-2023": 1.0,
+    "NEOV-2024": 1.0,
+    "ZYNT-2022": 1.0,
+    "ZYNT-2023": 1.0,
+    "ZYNT-2024": 1.0
+  },
+  "coherence": {
+    "ACMR-2022": true,
+    "ACMR-2023": true,
+    "ACMR-2024": true,
+    "HLSR-2022": true,
+    "HLSR-2023": true,
+    "HLSR-2024": true,
+    "LUMO-2022": true,
+    "LUMO-2023": true,
+    "LUMO-2024": true,
+    "NEOV-2022": true,
+    "NEOV-2023": true,
+    "NEOV-2024": true,
+    "ZYNT-2022": true,
+    "ZYNT-2023": true,
+    "ZYNT-2024": true
+  },
+  "sentiment_agreement": {
+    "ACMR-2022": {
+      "predicted": "cautious",
+      "gold": "positive",
+      "match": false
+    },
+    "ACMR-2023": {
+      "predicted": "positive",
+      "gold": "neutral",
+      "match": false
+    },
+    "ACMR-2024": {
+      "predicted": "positive",
+      "gold": "cautious",
+      "match": false
+    },
+    "HLSR-2022": {
+      "predicted": "positive",
+      "gold": "positive",
+      "match": true
+    },
+    "HLSR-2023": {
+      "predicted": "cautious",
+      "gold": "cautious",
+      "match": true
+    },
+    "HLSR-2024": {
+      "predicted": "neutral",
+      "gold": "cautious",
+      "match": false
+    },
+    "LUMO-2022": {
+      "predicted": "cautious",
+      "gold": "cautious",
+      "match": true
+    },
+    "LUMO-2023": {
+      "predicted": "cautious",
+      "gold": "cautious",
+      "match": true
+    },
+    "LUMO-2024": {
+      "predicted": "cautious",
+      "gold": "cautious",
+      "match": true
+    },
+    "NEOV-2022": {
+      "predicted": "cautious",
+      "gold": "positive",
+      "match": false
+    },
+    "NEOV-2023": {
+      "predicted": "neutral",
+      "gold": "neutral",
+      "match": true
+    },
+    "NEOV-2024": {
+      "predicted": "cautious",
+      "gold": "cautious",
+      "match": true
+    },
+    "ZYNT-2022": {
+      "predicted": "cautious",
+      "gold": "neutral",
+      "match": false
+    },
+    "ZYNT-2023": {
+      "predicted": "cautious",
+      "gold": "positive",
+      "match": false
+    },
+    "ZYNT-2024": {
+      "predicted": "cautious",
+      "gold": "cautious",
+      "match": true
+    }
+  },
+  "aggregate_metrics": {
+    "avg_groundedness": 1.0,
+    "sentiment_accuracy": 0.5333,
+    "coherence_pass_rate": 1.0,
+    "total_filings": 15
+  }
+}
