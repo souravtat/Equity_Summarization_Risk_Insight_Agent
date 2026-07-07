@@ -1,34 +1,29 @@
 # RUNBOOK — Financial Research Analyst Agent
 
 Operational procedures for deploying, running, and extending the agent.
+**All commands use `uv`.**
 
 ---
 
 ## 1  Environment Setup
 
-### Using uv (recommended)
-
 ```bash
-pip install uv          # install the uv package manager once
-uv sync                 # create .venv and install all dependencies
-source .venv/bin/activate  # activate (Linux/macOS)
-# .venv\Scripts\activate   # Windows
+# Install uv once (if not already installed)
+pip install uv
+
+# Create .venv and install all dependencies from pyproject.toml
+uv sync
 ```
 
-### Using pip
+No activation needed — prefix all commands with `uv run`.
 
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
-
-### API key
+### API key (optional)
 
 ```bash
 cp .env.example .env
 # Set GROQ_API_KEY in .env for LLM-powered summaries.
 # The server reads this at startup via os.getenv("GROQ_API_KEY").
+export $(cat .env | grep -v '#' | xargs)
 ```
 
 ---
@@ -36,7 +31,7 @@ cp .env.example .env
 ## 2  Starting the Server
 
 ```bash
-uvicorn app.server:app --host 0.0.0.0 --port 9060 --reload
+uv run uvicorn app.server:app --host 0.0.0.0 --port 9060 --reload
 ```
 
 | Endpoint | Method | Description |
@@ -52,21 +47,47 @@ uvicorn app.server:app --host 0.0.0.0 --port 9060 --reload
 ### Full suite (no server required)
 
 ```bash
-python evaluation/eval_runner.py
+uv run python evaluation/eval_runner.py
 # Writes results to evaluation/sample_summary.json
+# Includes error_cases with diagnostic notes for each mismatch
 ```
 
 ### Per-metric (requires running server)
 
 ```bash
-python evaluation/eval_groundedness.py           # all filings
-python evaluation/eval_groundedness.py ACMR-2024 # single filing
+uv run python evaluation/eval_groundedness.py           # all filings
+uv run python evaluation/eval_groundedness.py ACMR-2024 # single filing
 
-python evaluation/eval_sentiment_agreement.py
-python evaluation/eval_sentiment_agreement.py ZYNT-2023
+uv run python evaluation/eval_sentiment_agreement.py
+uv run python evaluation/eval_sentiment_agreement.py ZYNT-2023
 
-python evaluation/eval_coherence_proxy.py
+uv run python evaluation/eval_coherence_proxy.py
 ```
+
+### Evaluation note
+
+See [`evaluation/EVALUATION_NOTE.md`](evaluation/EVALUATION_NOTE.md) for a
+1–2 page write-up covering aggregate metrics, per-filing error analysis with
+root-cause notes, confusion matrix, and limitations.
+
+### Debug runner (all modules, no server)
+
+```bash
+uv run python debug_runner.py
+```
+
+Exercises every public function in `app/` (sections 1–9) and `evaluation/`
+(sections 10–13) in a single run.  Supports VS Code F5 debugging.
+
+### Unit tests
+
+```bash
+uv sync --extra dev
+uv run pytest tests/ -v
+```
+
+46 tests covering loader, chunker, sentiment scorer, retriever,
+summarisation pipeline, and FastAPI endpoints.
 
 ---
 
@@ -89,7 +110,6 @@ interface exactly matches LangChain's `PyPDFLoader`:
 
    ```bash
    uv add langchain langchain-community pypdf
-   # or: pip install langchain langchain-community pypdf
    ```
 
 2. **Create `app/pdf_loader.py`:**
@@ -134,7 +154,9 @@ interface exactly matches LangChain's `PyPDFLoader`:
 6. **Test:**
 
    ```bash
+   uv run uvicorn app.server:app --port 9060 --reload
    curl -X POST http://localhost:9060/summarize \
+        -H "Content-Type: application/json" \
         -d '{"filing_id": "path/to/filing.pdf"}'
    ```
 
@@ -172,7 +194,10 @@ def summarize_filing(filing_id: str) -> dict:
    ```json
    "NEWT-2025": { "tone": "positive" }
    ```
-3. Re-run the evaluation runner: `python evaluation/eval_runner.py`.
+3. Re-run the evaluation runner:
+   ```bash
+   uv run python evaluation/eval_runner.py
+   ```
 
 ---
 
@@ -181,7 +206,7 @@ def summarize_filing(filing_id: str) -> dict:
 | Symptom | Likely cause | Fix |
 |---|---|---|
 | `404` on `/summarize` | Wrong filing_id | Check `/filings` for valid IDs |
-| `"source": "lexicon"` despite GROQ_API_KEY being set | Key not loaded | Restart server; check `.env` |
-| `faiss-cpu` install fails on Apple Silicon | Architecture mismatch | `pip install faiss-cpu --no-binary faiss-cpu` or use conda: `conda install -c conda-forge faiss-cpu` |
-| Sentiment accuracy < 50% | Synthetic filings share boilerplate | Expected in lexicon mode; use Groq LLM for higher accuracy |
-| Pylint score < 9 | New code missing docstrings or type hints | Run `pylint app/ --output-format=text` and address each warning |
+| `"source": "lexicon"` despite GROQ_API_KEY being set | Key not loaded | Re-run `export $(cat .env | grep -v '#' | xargs)` then restart server |
+| `faiss-cpu` install fails on Apple Silicon | Architecture mismatch | `uv run pip install faiss-cpu --no-binary faiss-cpu` |
+| Sentiment accuracy < 50% | Synthetic filings share boilerplate | Expected in lexicon mode; set GROQ_API_KEY for LLM mode |
+| Pylint score < 9 | New code missing docstrings or type hints | `uv run pylint app/ --output-format=text` and address each warning |

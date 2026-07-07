@@ -100,6 +100,113 @@ def _coherence(summary: dict) -> bool:
     )
 
 
+def _extract_metrics_for_analysis(source_text: str) -> dict:
+    """Extract financial metrics from source text for error-case diagnosis.
+
+    Parameters
+    ----------
+    source_text :
+        Full text of the filing.
+
+    Returns
+    -------
+    dict
+        Revenue growth %, gross margin %, cash $M (any may be None).
+    """
+    import re as _re
+
+    rev = _re.search(r"[Rr]evenue\s+grew\s+(\d+(?:\.\d+)?)\s*%", source_text)
+    margin = _re.search(r"gross\s+margin\s+(\d+(?:\.\d+)?)\s*%", source_text, _re.IGNORECASE)
+    cash = _re.search(r"[Cc]ash[:\s]+\$(\d+(?:\.\d+)?)M", source_text, _re.IGNORECASE)
+    risk_bullets = len(_re.findall(r"^- ", source_text, _re.MULTILINE))
+
+    return {
+        "revenue_growth_pct": float(rev.group(1)) if rev else None,
+        "gross_margin_pct": float(margin.group(1)) if margin else None,
+        "cash_m": float(cash.group(1)) if cash else None,
+        "risk_bullet_count": risk_bullets,
+    }
+
+
+def _diagnose_mismatch(
+    filing_id: str,
+    predicted: str,
+    gold: str,
+    metrics: dict,
+) -> str:
+    """Generate a short explanatory note for a sentiment mismatch.
+
+    Parameters
+    ----------
+    filing_id :
+        Filing identifier.
+    predicted :
+        Tone predicted by the agent.
+    gold :
+        Gold-label tone.
+    metrics :
+        Financial metrics extracted from the source filing.
+
+    Returns
+    -------
+    str
+        Human-readable explanation of the likely cause.
+    """
+    growth = metrics.get("revenue_growth_pct")
+    margin = metrics.get("gross_margin_pct")
+    cash = metrics.get("cash_m")
+    risks = metrics.get("risk_bullet_count", 0)
+
+    notes: list = []
+
+    if predicted == "cautious" and gold in ("positive", "neutral"):
+        if growth is not None and growth < 12:
+            notes.append(
+                f"Low revenue growth ({growth}%) triggers negative metric "
+                f"adjustment, overriding other positive signals"
+            )
+        if margin is not None and margin < 65:
+            notes.append(
+                f"Gross margin ({margin}%) below 65% threshold adds "
+                f"strong negative weight"
+            )
+        if not notes:
+            notes.append(
+                "Lexicon negative/uncertainty word counts exceed positive "
+                "counts across shared boilerplate sections"
+            )
+
+    elif predicted == "positive" and gold in ("cautious", "neutral"):
+        if growth is not None and growth >= 20:
+            notes.append(
+                f"High revenue growth ({growth}%) triggers strong positive "
+                f"metric adjustment"
+            )
+        if margin is not None and margin >= 82:
+            notes.append(
+                f"High gross margin ({margin}%) adds positive weight"
+            )
+        if risks >= 3:
+            notes.append(
+                f"Gold label likely counts {risks} risk bullets as "
+                f"material, but lexicon scorer does not count discrete items"
+            )
+
+    elif predicted == "neutral" and gold == "cautious":
+        notes.append(
+            "Balanced lexicon scores produce neutral; gold label weighs "
+            "risk-factor count or outlook language more heavily"
+        )
+
+    if not notes:
+        notes.append(
+            "Mismatch likely due to subjective tone boundary between "
+            f"'{predicted}' and '{gold}'"
+        )
+
+    return "; ".join(notes) + "."
+
+
 def run_all_evaluations() -> dict:  # pylint: disable=too-many-locals
     """Run the complete evaluation suite across all corpus filings.
 
@@ -182,11 +289,43 @@ def run_all_evaluations() -> dict:  # pylint: disable=too-many-locals
         "total_filings": len(filing_ids),
     }
 
+    # -------------------------------------------------------------------
+    # Error case analysis — log mismatches with explanatory notes
+    # -------------------------------------------------------------------
+    error_cases: List[dict] = []
+    for fid, sr in sentiment_results.items():
+        if not sr.get("match", True):
+            summary = summaries.get(fid, {})
+            source_path = _CORPUS_DIR / f"{fid}.md"
+            source_text = source_path.read_text(encoding="utf-8") if source_path.exists() else ""
+            metrics = _extract_metrics_for_analysis(source_text)
+            note = _diagnose_mismatch(
+                fid, sr["predicted"], sr["gold"], metrics
+            )
+            error_cases.append({
+                "filing_id": fid,
+                "predicted": sr["predicted"],
+                "gold": sr["gold"],
+                "metrics": metrics,
+                "note": note,
+            })
+
+    if error_cases:
+        print(f"\n--- Error Case Analysis ({len(error_cases)} mismatches) ---")
+        for ec in error_cases:
+            print(
+                f"  {ec['filing_id']}: predicted={ec['predicted']}, "
+                f"gold={ec['gold']}"
+            )
+            print(f"    metrics: {ec['metrics']}")
+            print(f"    note: {ec['note']}")
+
     output = {
         "summaries": summaries,
         "groundedness": groundedness_scores,
         "coherence": coherence_results,
         "sentiment_agreement": sentiment_results,
+        "error_cases": error_cases,
         "aggregate_metrics": aggregate,
     }
 

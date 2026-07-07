@@ -1,6 +1,7 @@
 # Getting Started — Zero to Running in 10 Minutes
 
 > **Who is this for?** Anyone seeing this project for the first time with no prior context.
+> **All commands below use `uv`.**
 
 ---
 
@@ -24,9 +25,12 @@ Think of it as an AI assistant that reads a 20-page filing and gives you a 5-lin
 corpus/filings/     ← 15 fake company reports (the "data")
 app/                ← the Python code that reads and summarises them
 evaluation/         ← scripts that measure how good the summaries are
+  EVALUATION_NOTE.md  ← 1-2 page write-up of evaluation results & error analysis
+  sample_summary.json ← generated evaluation output (all 15 filings)
+tests/              ← unit tests (pytest)
 notebooks/          ← interactive Jupyter walkthrough
 prompts/            ← the instruction given to the AI model
-requirements.txt    ← Python packages needed
+pyproject.toml      ← project definition and dependencies (used by uv)
 README.md           ← full technical reference
 RUNBOOK.md          ← how to swap to real PDFs / deploy
 ```
@@ -37,8 +41,14 @@ RUNBOOK.md          ← how to swap to real PDFs / deploy
 
 You need:
 - Python 3.10 or later → check with `python --version`
+- `uv` installed → check with `uv --version`
 - A terminal (Terminal on Mac, Command Prompt / PowerShell on Windows)
 - (Optional) A free Groq API key for AI-powered summaries → https://console.groq.com
+
+Install `uv` if not already installed:
+```bash
+pip install uv
+```
 
 ---
 
@@ -50,21 +60,24 @@ cd path/to/Equity_Summarization_Risk_Insight_Agent
 
 ---
 
-## Step 2 — Install Python packages
+## Step 2 — Install all dependencies
 
 ```bash
-pip install -r requirements.txt
+uv sync
 ```
 
-> If you see errors about `faiss-cpu` on Apple Silicon Mac, run:
-> `pip install faiss-cpu --no-binary faiss-cpu`
+That's it. `uv` creates a `.venv` and installs everything from `pyproject.toml` automatically.
+**No need to activate the virtual environment** — prefix all commands with `uv run`.
+
+> **Apple Silicon Mac note:** if `faiss-cpu` fails, run:
+> `uv run pip install faiss-cpu --no-binary faiss-cpu`
 
 ---
 
 ## Step 3 — (Optional) Enable AI summaries
 
 By default the project uses a rule-based approach (no internet needed).
-For better summaries, get a free Groq key and set it up:
+For better summaries, get a free Groq key at https://console.groq.com and set it up:
 
 ```bash
 cp .env.example .env
@@ -72,13 +85,9 @@ cp .env.example .env
 
 Open `.env` in any text editor and replace `your_groq_api_key_here` with your actual key.
 
-Then load it before running:
+Load the key before running commands:
 ```bash
-# Mac / Linux
 export $(cat .env | grep -v '#' | xargs)
-
-# Windows PowerShell
-Get-Content .env | ForEach-Object { if ($_ -notmatch '^#') { $var = $_ -split '=', 2; [System.Environment]::SetEnvironmentVariable($var[0], $var[1]) } }
 ```
 
 ---
@@ -99,7 +108,7 @@ This is the synthetic data the agent reads.
 ## Step 5 — Run the pipeline directly (no server needed)
 
 ```bash
-python -c "
+uv run python -c "
 from app.summarize import summarize_filing
 import json
 result = summarize_filing('HLSR-2024')
@@ -117,7 +126,7 @@ You should see something like:
   ],
   "risks": [
     "Cybersecurity incidents could result in penalties. (Risk Factors)",
-    ...
+    "..."
   ],
   "tone": "cautious",
   "source": "lexicon"
@@ -128,10 +137,10 @@ You should see something like:
 
 ## Step 6 — Run the full evaluation
 
-This tests all 15 filings and saves results to `evaluation/sample_summary.json`:
+Tests all 15 filings and saves results to `evaluation/sample_summary.json`:
 
 ```bash
-python evaluation/eval_runner.py
+uv run python evaluation/eval_runner.py
 ```
 
 You'll see a table like:
@@ -145,16 +154,47 @@ You'll see a table like:
 
 | Metric | Meaning | Expected |
 |---|---|---|
-| Groundedness | Are summary words found in the source? | ≥ 0.85 |
+| Groundedness | Are summary words found in the source? | 1.00 |
 | Sentiment accuracy | Does predicted tone match the gold label? | ~53% (rule-based) |
-| Coherence | Does output have exactly 2 highlights, 1-3 risks, valid tone? | 100% |
+| Coherence | Exactly 2 highlights, 1-3 risks, valid tone? | 100% |
 
 ---
 
-## Step 7 — Start the REST API (optional)
+## Step 7 — Read the evaluation note
+
+After running the evaluation, review the detailed write-up:
 
 ```bash
-uvicorn app.server:app --host 0.0.0.0 --port 9060 --reload
+cat evaluation/EVALUATION_NOTE.md
+```
+
+This 1-2 page document covers:
+- Aggregate metrics (groundedness, sentiment accuracy, coherence)
+- Per-filing error analysis with root-cause notes for each mismatch
+- Confusion matrix for tone classification
+- Limitations and future work
+
+The eval runner also logs error cases with diagnostic notes directly in
+`evaluation/sample_summary.json` under the `error_cases` key.
+
+---
+
+## Step 8 — Run the unit tests
+
+```bash
+uv sync --extra dev
+uv run pytest tests/ -v
+```
+
+You should see all tests pass (46 tests covering loader, chunker, sentiment
+scorer, retriever, summarisation pipeline, and API endpoints).
+
+---
+
+## Step 9 — Start the REST API (optional)
+
+```bash
+uv run uvicorn app.server:app --host 0.0.0.0 --port 9060 --reload
 ```
 
 Then in a **new terminal**:
@@ -169,15 +209,15 @@ curl -X POST http://localhost:9060/summarize \
      -d '{"filing_id": "ACMR-2023"}'
 ```
 
-API docs are auto-generated at: http://localhost:9060/docs
+API docs auto-generated at: http://localhost:9060/docs
 
 ---
 
-## Step 8 — Explore interactively (Jupyter notebook)
+## Step 10 — Explore interactively (Jupyter notebook)
 
 ```bash
-pip install jupyter
-jupyter notebook notebooks/agent.ipynb
+uv add jupyterlab
+uv run jupyter lab notebooks/agent.ipynb
 ```
 
 The notebook walks through all 5 project phases with explanations and live output.
@@ -188,11 +228,12 @@ The notebook walks through all 5 project phases with explanations and live outpu
 
 | Problem | Fix |
 |---|---|
-| `ModuleNotFoundError: No module named 'app'` | Run commands from the project root folder |
-| `faiss-cpu` install fails | See Step 2 note above |
-| `"source": "lexicon"` even with API key | Make sure you ran the `export` command in Step 3 |
-| Port 9060 already in use | Change to another port: `--port 9061` |
-| Want to try a different filing | Replace `HLSR-2024` with any ID from `corpus/filings/` |
+| `ModuleNotFoundError: No module named 'app'` | Run from the project root folder (where `pyproject.toml` is) |
+| `uv sync` build error about package name | Already fixed in `pyproject.toml` — re-run `uv sync` |
+| `faiss-cpu` install fails on Apple Silicon | `uv run pip install faiss-cpu --no-binary faiss-cpu` |
+| `"source": "lexicon"` even with API key set | Re-run `export $(cat .env | grep -v '#' | xargs)` in the same terminal |
+| Port 9060 already in use | `uv run uvicorn app.server:app --port 9061 --reload` |
+| Want to try a different filing | Replace `HLSR-2024` with any ID from the list below |
 
 ---
 

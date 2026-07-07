@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Runner (no server)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/Users/s0t0a0b/Library/CloudStorage/OneDrive-WalmartInc/My Documents/personal/Data Science/upgrad/BIA/code/src/99_Project/Equity_Summarization_Risk_Insight_Agent/debug_runner.py",
+            "cwd": "/Users/s0t0a0b/Library/CloudStorage/OneDrive-WalmartInc/My Documents/personal/Data Science/upgrad/BIA/code/src/99_Project/Equity_Summarization_Risk_Insight_Agent",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
+            "name": "FastAPI: Equity Agent",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "app.server:app",
+                "--host", "0.0.0.0",
+                "--port", "9060"
+            ],
+            "cwd": "/Users/s0t0a0b/Library/CloudStorage/OneDrive-WalmartInc/My Documents/personal/Data Science/upgrad/BIA/code/src/99_Project/Equity_Summarization_Risk_Insight_Agent",
+            "envFile": "/Users/s0t0a0b/Library/CloudStorage/OneDrive-WalmartInc/My Documents/personal/Data Science/upgrad/BIA/code/src/99_Project/Equity_Summarization_Risk_Insight_Agent/.env",
+            "jinja": true,
+            "justMyCode": true
+        }
+    ]
+}

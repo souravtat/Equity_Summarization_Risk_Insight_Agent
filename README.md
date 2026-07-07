@@ -26,7 +26,11 @@ evaluation/
   eval_sentiment_agreement.py  Tone accuracy vs. gold labels
   eval_coherence_proxy.py   Structural validation
   eval_runner.py            Full suite runner → sample_summary.json
-  sample_summary.json       Generated evaluation output
+  sample_summary.json       Generated evaluation output (with error_cases)
+  EVALUATION_NOTE.md        1–2 page evaluation write-up & error analysis
+tests/                      Unit tests (pytest) — loader, chunker, sentiment,
+                            retriever, summarise, server
+debug_runner.py             Standalone debug script exercising all modules
 notebooks/agent.ipynb       Interactive exploration notebook
 prompts/summary_prompt.txt  LLM system prompt
 ```
@@ -70,17 +74,10 @@ fundamentals (revenue growth %, gross margin %, cash).
 
 ## Quick Start
 
-### 1 — Environment (uv, recommended)
+### 1 — Install dependencies
 
 ```bash
-pip install uv           # once
-uv sync                  # installs all dependencies from pyproject.toml
-```
-
-Or with pip:
-
-```bash
-pip install -r requirements.txt
+uv sync
 ```
 
 ### 2 — API key (optional but recommended)
@@ -89,12 +86,13 @@ pip install -r requirements.txt
 cp .env.example .env
 # Edit .env and set GROQ_API_KEY=<your_key>
 # Free keys: https://console.groq.com
+export $(cat .env | grep -v '#' | xargs)
 ```
 
 ### 3 — Start the server
 
 ```bash
-uvicorn app.server:app --host 0.0.0.0 --port 9060 --reload
+uv run uvicorn app.server:app --host 0.0.0.0 --port 9060 --reload
 ```
 
 ### 4 — Call the API
@@ -134,24 +132,22 @@ curl http://localhost:9060/filings
 
 ## Evaluate
 
-All three evaluation scripts can be run against a live server:
-
 ```bash
 # Full evaluation suite (no server needed — runs pipeline directly)
-python evaluation/eval_runner.py
+uv run python evaluation/eval_runner.py
 
-# Or individually against the running API:
-python evaluation/eval_groundedness.py
-python evaluation/eval_sentiment_agreement.py
-python evaluation/eval_coherence_proxy.py HLSR-2024
+# Individually against the running API:
+uv run python evaluation/eval_groundedness.py
+uv run python evaluation/eval_sentiment_agreement.py
+uv run python evaluation/eval_coherence_proxy.py HLSR-2024
 ```
 
 ### Sample metrics (lexicon mode, 15 filings)
 
 | Metric | Value |
 |---|---|
-| Avg groundedness | ≥ 0.85 |
-| Sentiment accuracy | ~47% |
+| Avg groundedness | 1.00 |
+| Sentiment accuracy | ~53% |
 | Coherence pass rate | 100% |
 
 > **Note on sentiment accuracy**: all 15 synthetic filings share identical
@@ -159,6 +155,25 @@ python evaluation/eval_coherence_proxy.py HLSR-2024
 > classifier distinguishes tone primarily through extracted financial metrics
 > (revenue growth %, gross margin %, cash position).  LLM mode achieves
 > substantially higher agreement by reasoning about the context holistically.
+
+For a detailed breakdown of error cases (root-cause analysis per mismatch,
+confusion matrix, and limitations), see
+[`evaluation/EVALUATION_NOTE.md`](evaluation/EVALUATION_NOTE.md).
+
+---
+
+## Debug Runner
+
+Exercise every `app/` and `evaluation/` module in a single run (no server
+needed):
+
+```bash
+uv run python debug_runner.py
+```
+
+Sections 1–9 cover all `app/` modules; sections 10–13 cover evaluation
+(groundedness, sentiment agreement, coherence, full eval suite).  Set
+breakpoints on any line marked `← breakpoint` for step-through debugging.
 
 ---
 
@@ -178,10 +193,10 @@ python evaluation/eval_coherence_proxy.py HLSR-2024
 
 ```bash
 # Lint (target: 9+)
-pylint app/ evaluation/
+uv run pylint app/ evaluation/
 
 # Tests
-pytest tests/ -v
+uv run pytest tests/ -v
 ```
 
 See **RUNBOOK.md** for instructions on swapping the loader to real PDFs via

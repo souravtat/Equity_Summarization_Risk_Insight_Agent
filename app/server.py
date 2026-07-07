@@ -119,7 +119,7 @@ def list_filings() -> Dict[str, Any]:
 
 
 @app.post("/summarize", response_model=SummariseResponse, tags=["agent"])
-def summarize(req: SummariseRequest) -> Dict[str, Any]:
+async def summarize(req: SummariseRequest) -> Dict[str, Any]:
     """Generate an analyst summary for a single filing.
 
     Attempts the Groq LLM pipeline first; falls back to the lexicon + FAISS
